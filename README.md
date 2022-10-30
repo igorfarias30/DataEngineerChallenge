@@ -25,18 +25,18 @@
 
 8. su - airflow
 
-9. python -m venv .sandbox
+9. python -m venv .challenge
 
-10. source .sandbox/bin/activate
-
-source .sandbox/bin/activate
-* Activate the virtual environment sandbox
+10. source .challenge/bin/activate
+* Activate the virtual environment challenge
 
 wget https://raw.githubusercontent.com/apache/airflow/constraints-2.0.2/constraints-3.8.txt
 * Download the requirement file to install the right version of Airflow’s dependencies 
 
 
 pip install "apache-airflow[crypto,celery,postgres,cncf.kubernetes,docker]"==2.0.2 --constraint ./constraints-3.8.txt
+
+pip install "apache-airflow[postgres]"==2.0.2 --constraint ./constraints-3.8.txt
 
 
 * Install the version 2.0.2 of apache-airflow with all subpackages defined between square brackets. (Notice that you can still add subpackages after all, you will use the same command with different subpackages even if Airflow is already installed)
