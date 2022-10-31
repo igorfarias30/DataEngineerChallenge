@@ -4,11 +4,20 @@ from fastapi import FastAPI
 from sqlalchemy import create_engine
 import pandas as pd
 
-from api.models import Coordinates
-from api.helpers import weekly_mean_by_region, weekly_mean_by_coordinate
+from .api.models import Coordinates
+from .api.helpers import weekly_mean_by_region, weekly_mean_by_coordinate
 
-SQLALCHEMY_DATABASE_URL = 'postgresql+psycopg2://airflow:airflow@localhost/airflow'
-app = FastAPI()
+SQLALCHEMY_DATABASE_URL = 'postgresql+psycopg2://airflow:airflow@postgres/airflow'
+
+app = FastAPI(
+    title="Jobsity Challenge API",
+    description="Rest API to solve Jobsity challenge. ",
+    version="0.0.1",
+    contact={
+        "name": "Igor Farias",
+        "email": "igorfariasmi@gmail.com",
+    }
+)
 
 
 @app.post("/weekly-average-by-cordinates")

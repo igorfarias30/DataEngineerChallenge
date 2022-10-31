@@ -28,7 +28,16 @@ x-airflow-common:
       condition: service_healthy
 
 services:
+  web:
+    container_name: rest_api
+    build: .
+    ports:
+      - "8000:8000"
+    # networks:
+    #   - challengenetwork
+
   postgres:
+    container_name: postgres
     image: postgres:13
     environment:
       POSTGRES_USER: airflow
@@ -43,6 +52,8 @@ services:
       interval: 5s
       retries: 5
     restart: always
+    # networks:
+    #   - challengenetwork
 
   redis:
     image: redis:latest
@@ -230,3 +241,7 @@ services:
 
 volumes:
   postgres-db-volume:
+
+# networks:
+#       challengenetwork:
+#           driver: bridge

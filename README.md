@@ -47,14 +47,37 @@ Representation of the DAG:
 
 ## 2. Install RestAPI Requirements
 
-2.1 Create Python Virtual Environment. I'm using Python 3.10.8:
+### 2.1 Using Docker
+
+#### 2.1.1 Build image application:
+
+`$: docker build -t challenge_rest_api .`
+
+#### 2.1.2 Create and Run Container:
+
+`$: docker run -d --name rest_api -p 8000:8000 challenge_rest_api`
+
+#### 2.1.3 Open link browser to see the Swagger API:
+http://localhost:8000/docs
+
+### 2.2 Using Python Virtual Environment
+
+Create Python Virtual Environment. I'm using Python 3.10.8:
 
 `$: python -m venv venv`
 
-`$: .\venv\Scripts\activate` only in **Windows**
+#### 2.2.1 Windows:
+
+`$: .\venv\Scripts\activate`
+
+##### 2.2.1.2 Unix based system:
+
+`$: source .\venv\bin\activate`
+
+### 2.2.2 Install app dependencies:
 
 `$: pip install -r requirements.txt`
 
-2.2 Run RestAPI on specific port
+### 2.2.3 Run RestAPI on specific port
 
 `$: uvicorn main:app --host "0.0.0.0" --port 8000 --reload`
