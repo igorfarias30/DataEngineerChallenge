@@ -9,9 +9,10 @@ from typing import Tuple
 import logging
 
 
+# downloaded the data source and save on repository
 DATA_PATH = "/opt/airflow/dags/data/trips.csv"
 
-def split_points(point: str) -> Tuple[str]:
+def split_points(point: str) -> Tuple[str, str]:
     if not point.startswith("POINT"):
         return ('0', '0')
 
@@ -68,7 +69,6 @@ def ProcessTripData():
             origin_x, origin_y = split_points(row[1])
             destin_x, destin_y = split_points(row[2])
 
-            logging.info(f"POINTS => {origin_x}, {origin_y}")
             destination_cursor.execute("""
                 INSERT INTO public.trips (region, origin_coord_x, origin_coord_y, destination_coord_x, destination_coord_y, datetime, datasource)
                 VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}')

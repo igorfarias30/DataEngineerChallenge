@@ -27,3 +27,4 @@ async def get_weekly_average_by_region(region: str) -> Dict[str, Union[str, floa
         "region": region,
         "weekly_average": average
     }
+
