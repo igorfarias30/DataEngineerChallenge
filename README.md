@@ -1,135 +1,60 @@
-# Install requirements
 
-1. Install Docker
-> docker run -it --rm -p 8080:8080 python:3.8-slim /bin/bash
+# Jobsity Challenge
 
-2. Export AIRFLOW_HOME
-> export AIRFLOW_HOME=/usr/local/airflow
+This documentation try to explain how to run the ingestion data and RestAPI.
 
-3. env | grep airflow
-* To check that the environment variable has been well exported
+Before run, certified that you have docker on your machine.
+> OBS.: I'm using here a Windows 11 machine
 
+## 1. Install requirements
 
-4. apt-get update -y && apt-get install -y wget libczmq-dev curl libssl-dev git inetutils-telnet bind9utils freetds-dev libkrb5-dev libsasl2-dev libffi-dev libpq-dev freetds-bin build-essential default-libmysqlclient-dev apt-utils rsync zip unzip gcc && apt-get clean
-* Install all tools and dependencies that can be required by Airflow
+To ingest the data and apply some transformation I propose a solution that uses **Airflow**. After ingestion, I store the data
+on **Postgres**.  
 
+The rest api is build using **FastAPI**.
 
-5. useradd -ms /bin/bash -d ${AIRFLOW_HOME} airflow
-* Create the user airflow, set its home directory to the value of AIRFLOW_HOME and log into it
+### 1.1 Install Airflow Dependencies
 
+All the airflow dependencies are conteinerazed on `docker-compose.yml`. So, to run, try this:
 
-6. cat /etc/passwd | grep airflow
-* Show the file /etc/passwd to check that the airflow user has been created
+`$: docker compose up -d`
 
-7. pip install --upgrade pip
+Start airflow:
 
-8. su - airflow
+`$: docker compose up -d airflow-init`
 
-9. python -m venv .challenge
+### 1.2 Check Airflow is okay.
 
-10. source .challenge/bin/activate
-* Activate the virtual environment challenge
+Open browser on url http://localhost:8080
+* username: airflow
+* password: airflow
 
-wget https://raw.githubusercontent.com/apache/airflow/constraints-2.0.2/constraints-3.8.txt
-* Download the requirement file to install the right version of Airflow’s dependencies 
+### 1.3 Check if DAG already
+On DAGS screen there are a input box called "Search Dags". Type
+on box the DAG *process-trips-data*.
 
+### 1.4 What the DAG really does
+The DAG has three stages:
+* 1. The fisrt stage is divides by two steps:
+    * 1.1. Create `trips_staging` table on database
+    * 1.2. Create `trips` table on database
+* 2. Read `.csv` file and load the data on `trips_staging` table. 
+* 3. Get the data stored in `trips_staging` table, apply a transformation to split the point's columns string into a column to represent point `x` and `y`. For example, `origin_coordinate` will split to `origin_coordinate_x` and `origin_coordinate_y`.
 
-pip install "apache-airflow[crypto,celery,postgres,cncf.kubernetes,docker]"==2.0.2 --constraint ./constraints-3.8.txt
+Representation of the DAG:
 
-pip install "apache-airflow[postgres]"==2.0.2 --constraint ./constraints-3.8.txt
+![Ingestion Pipeline](docs/images/ingestion_dag.png)
 
+## 2. Install RestAPI Requirements
 
-* Install the version 2.0.2 of apache-airflow with all subpackages defined between square brackets. (Notice that you can still add subpackages after all, you will use the same command with different subpackages even if Airflow is already installed)
+2.1 Create Python Virtual Environment. I'm using Python 3.10.8:
 
+`$: python -m venv venv`
 
-airflow db init
-* Initialise the metadatabase
+`$: .\venv\Scripts\activate` only in **Windows**
 
+`$: pip install -r requirements.txt`
 
-airflow scheduler &
-* Start Airflow’s scheduler in background
+2.2 Run RestAPI on specific port
 
-
-airflow webserver &
-* Start Airflow’s webserver in background
-
-
-docker build -t airflow-basic .
-* Build a docker image from the Dockerfile in the current directory (airflow-materials/airflow-basic)  and name it airflow-basic
-
-docker run --rm -d -p 8080:8080 airflow-basic
-
-Quick Tour of Airflow CLI
-
-
-docker ps
-* Show running docker containers
-
-
-docker exec -it container_id /bin/bash
-* Execute the command /bin/bash in the container_id to get a shell session
-
-
-pwd
-* Print the current path where you are
-
-
-airflow db init
-* Initialise the metadatabase
-
-
-airflow db reset
-* Reinitialize the metadatabase (Drop everything)
-
-
-airflow db upgrade
-* Upgrade the metadatabase (Latest schemas, values, ...)
-
-
-airflow webserver
-* Start Airflow’s webserver
-
-
-airflow scheduler
-* Start Airflow’s scheduler
-
-
-airflow celery worker
-* Start a Celery worker (Useful in distributed mode to spread tasks among nodes - machines)
-
-
-airflow dags list
-* Give the list of known dags (either those in the examples folder or in dags folder)
-
-
-ls
-* Display the files/folders of the current directory 
-
-
-airflow dags trigger example_python_operator
-* Trigger the dag example_python_operator with the current date as execution date
-
-
-airflow dags trigger example_python_operator -e 2021-01-01
-* Trigger the dag example_python_operator with a date in the past as execution date (This won’t trigger the tasks of that dag unless you set the option catchup=True in the DAG definition)
-
-
-airflow dags trigger example_python_operator -e '2021-01-01 19:04:00+00:00'
-* Trigger the dag example_python_operator with a date in the future (change the date here with one having +2 minutes later than the current date displayed in the Airflow UI). The dag will be scheduled at that date.
-
-
-airflow dags list-runs -d example_python_operator
-* Display the history of example_python_operator’s dag runs
-
-
-airflow tasks list example_python_operator
-* List the tasks contained into the example_python_operator dag
-
-
-airflow tasks test example_python_operator print_the_context 2021-01-01
-* Allow to test a task (print_the_context) from a given dag (example_python_operator here) without taking care of dependencies and past runs. Useful for debugging.
-
-pip install fastapi
-pip install uvicorn
-
-uvicorn main:app --host "0.0.0.0" --port 8000 --reload
+`$: uvicorn main:app --host "0.0.0.0" --port 8000 --reload`

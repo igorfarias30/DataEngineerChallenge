@@ -57,7 +57,7 @@ def ProcessTripData():
 
 
     @task
-    def load_staging():
+    def store_proccessed_data():
         destination = PostgresHook(postgres_conn_id='tutorial_pg_conn')
         destination_conn = destination.get_conn()
         destination_cursor = destination_conn.cursor()
@@ -78,7 +78,7 @@ def ProcessTripData():
         destination_conn.close()
 
     
-    [create_trip_table, create_trip_staging_table] >> get_data() >> load_staging()
+    [create_trip_table, create_trip_staging_table] >> get_data() >> store_proccessed_data()
 
 
 dag = ProcessTripData()
