@@ -33,7 +33,10 @@ Open browser on url http://localhost:8080
 On DAGS screen there are a input box called "Search Dags". Type
 on box the DAG *process-trips-data*.
 
-### 1.4 What the DAG really does
+### 1.4 Add Connection on Airflow Configuration
+
+
+### 1.5 What the DAG really does
 The DAG has three stages:
 * 1. The fisrt stage is divides by two steps:
     * 1.1. Create `trips_staging` table on database
@@ -49,13 +52,7 @@ Representation of the DAG:
 
 ### 2.1 Using Docker
 
-#### 2.1.1 Build image application:
-
-`$: docker build -t challenge_rest_api .`
-
-#### 2.1.2 Create and Run Container:
-
-`$: docker run -d --name rest_api -p 8000:8000 challenge_rest_api`
+The container was created when the command to create airflow dependencies was executed.
 
 #### 2.1.3 Open link browser to see the Swagger API:
 http://localhost:8000/docs
