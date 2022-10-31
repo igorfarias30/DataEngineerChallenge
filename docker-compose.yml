@@ -33,8 +33,6 @@ services:
     build: .
     ports:
       - "8000:8000"
-    # networks:
-    #   - challengenetwork
 
   postgres:
     container_name: postgres
@@ -52,8 +50,6 @@ services:
       interval: 5s
       retries: 5
     restart: always
-    # networks:
-    #   - challengenetwork
 
   redis:
     image: redis:latest
@@ -241,7 +237,3 @@ services:
 
 volumes:
   postgres-db-volume:
-
-# networks:
-#       challengenetwork:
-#           driver: bridge

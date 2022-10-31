@@ -9,6 +9,9 @@ from .api.helpers import weekly_mean_by_region, weekly_mean_by_coordinate
 
 SQLALCHEMY_DATABASE_URL = 'postgresql+psycopg2://airflow:airflow@postgres/airflow'
 
+# if you are running the app outside container the connection string changes to:
+# SQLALCHEMY_DATABASE_URL = 'postgresql+psycopg2://airflow:airflow@localhost/airflow'
+
 app = FastAPI(
     title="Jobsity Challenge API",
     description="Rest API to solve Jobsity challenge. ",
