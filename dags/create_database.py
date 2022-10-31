@@ -40,6 +40,7 @@ def ProcessTripData():
         sql="sql/create_trip_staging_table.sql",
     )
 
+
     @task
     def get_data():
         postgres_hook = PostgresHook(postgres_conn_id="tutorial_pg_conn")
@@ -52,6 +53,7 @@ def ProcessTripData():
             )
         connection.commit()
         connection.close()
+
 
     @task
     def load_staging():
@@ -70,7 +72,7 @@ def ProcessTripData():
             destination_cursor.execute("""
                 INSERT INTO public.trips (region, origin_coord_x, origin_coord_y, destination_coord_x, destination_coord_y, datetime, datasource)
                 VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}')
-            """.format(row[0], origin_x, origin_y, destin_x, destin_y, row[3], row[4]))
+            """.format(row[0], float(origin_x), float(origin_y), float(destin_x), float(destin_y), row[3], row[4]))
 
         destination_conn.commit()
         destination_conn.close()

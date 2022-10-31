@@ -128,3 +128,8 @@ airflow tasks list example_python_operator
 
 airflow tasks test example_python_operator print_the_context 2021-01-01
 * Allow to test a task (print_the_context) from a given dag (example_python_operator here) without taking care of dependencies and past runs. Useful for debugging.
+
+pip install fastapi
+pip install uvicorn
+
+uvicorn main:app --host "0.0.0.0" --port 8000 --reload
