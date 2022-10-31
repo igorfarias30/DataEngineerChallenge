@@ -31,10 +31,18 @@ Open browser on url http://localhost:8080
 
 ### 1.3 Check if DAG already
 On DAGS screen there are a input box called "Search Dags". Type
-on box the DAG *process-trips-data*.
+on box the DAG **process-trips-data**.
 
 ### 1.4 Add Connection on Airflow Configuration
+To create one via the web UI, from the "Admin" menu, select "Connections", then click the Plus sign to "Add a new record" to the list of connections.
 
+* Connection Id: `tutorial_pg_conn`
+* Connection Type: `postgres`
+* Host: `postgres`
+* Schema: `airflow`
+* Login: `airflow`
+* Password: `airflow`
+* Port: `5432`
 
 ### 1.5 What the DAG really does
 The DAG has three stages:

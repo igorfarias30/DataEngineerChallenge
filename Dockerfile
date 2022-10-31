@@ -11,6 +11,7 @@ RUN pip install --upgrade pip
 
 # 
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+RUN pip install requests
 
 # 
 COPY ./app /code/app
